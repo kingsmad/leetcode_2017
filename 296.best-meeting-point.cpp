@@ -1,37 +1,34 @@
 class Solution {
 public:
-  int Calc(vector<vector<int>>& grid, int r, int c) {
-      int ans = 0;
-
-      for (int i=0; i<grid.size(); ++i) {
-        for (int j=0; j<grid.at(0).size(); ++j) {
-          if (grid[i][j] == 1) {
-            ans += abs(r - i);
-            ans += abs(c - j);
-          }
-        }
-      }
-      return ans;
-  }
-
     int minTotalDistance(vector<vector<int>>& grid) {
       if (grid.empty()) return 0;
-      int x = 0, y = 0, cnt = 0;
+      vector<int> v1, v2;     
+      for (int i=0; i<grid.size(); ++i) {
+        for (int j=0; j<grid.at(0).size(); ++j) {
+          if (grid[i][j] != 1) continue;
+          v1.push_back(i);
+          v2.push_back(j);
+        }
+      }
+
+      sort(v1.begin(), v1.end());
+      sort(v2.begin(), v2.end());
+      
+
+      int ans = 0;
+      int x = v1.at(v1.size()/2), y = v2.at(v2.size()/2);
+
       for (int i=0; i<grid.size(); ++i) {
         for (int j=0; j<grid.at(0).size(); ++j) {
           if (grid[i][j] == 1) {
-            x += i;
-            y += j;
-            ++cnt;
+            ans += abs(i - x);
+            ans += abs(j - y);
           }
         }
       }
 
-      int ans = 0;
-      ans = 
-      
       return ans;
+      
     }
 
-    
 };
