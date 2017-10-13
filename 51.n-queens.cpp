@@ -1,3 +1,9 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
 class Solution {
   vector<int> ans_;
   vector<vector<string>> vans_;
