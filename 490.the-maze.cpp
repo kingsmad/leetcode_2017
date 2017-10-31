@@ -1,79 +1,47 @@
-#include <iostream>
+#include <cstring>
 #include <vector>
+#include <string>
+#include <iostream>
 
 using namespace std;
-const int maxn = 1e4 + 10;
-int r, c;
-int fa[maxn];
-int findset(int x) { return (x == fa[x]) ? x : (fa[x] = findset(fa[x])); }
-void join(int x, int y) {
-  int u = findset(x), v = findset(y);
-  if (u == v) return;
-  fa[u] = v;
-}
+const int maxn = 110;
+const int rs[4] = { 0, 0, 1, -1};
+const int cs[4] = {1, -1, 0, 0};
+
+bool vis[maxn][maxn];
+int dx, dy, row, col;
 
 class Solution {
  public:
   bool hasPath(vector<vector<int>>& maze, vector<int>& start,
                vector<int>& destination) {
-    r = maze.size(), c = maze.at(0).size();
-    for (int i = 0; i < Sid(r-1, c-1); ++i) fa[i] = i;
-
-    // single islands
-    Link(start.at(0), start.at(1), maze);
-    Link(destination.at(0), destination.at(1), maze);
-
-    // roads
-    for (int i = 0; i < r; ++i) {
-      for (int j = 0; j < c;) {
-        while (j < c && maze[i][j] == 0) ++j;
-        if (j > 0) join(Sid(i, 0), Sid(i, j-1));
-        if (j == c) break;
-
-        int q = j + 1;
-        while (q < c && maze[i][q] == 0) ++q;
-        if (q - j >= 1) join(Sid(i, j + 1), Sid(i, q - 1));
-
-        j = q + 1;
-      }
-    }
-
-    for (int j = 0; j < c; ++j) {
-      for (int i = 0; i < r; ) {
-        while (i < r && maze[i][j] == 0) ++i;
-        if (i > 0) join(Sid(0, j), Sid(i-1, j));
-        if (i == r) break;
-
-        int q = i + 1;
-        while (q < r && maze[q][j] == 0) ++q;
-        if (q - i >= 1) join(Sid(i + 1, j), Sid(q - 1, j));
-
-        i = q + 1;
-      }
-    }
-
-    return findset(Sid(start[0], start[1]))
-           == findset(Sid(destination[0], destination[1]));
+    memset(vis, 0, sizeof(vis));
+    row = maze.size(), col = maze.at(0).size();
+    dx = destination.at(0), dy = destination.at(1);
+    return Dfs(start.at(0), start.at(1), maze);
   }
 
-  void Link(int x, int y, const vector<vector<int> > & maze) {
-    int p = x-1;     
-    while(p >= 0 && maze[p][y] == 0) --p;
-    join(Sid(p+1, y), Sid(x, y));
-
-    p = x + 1;
-    while(p < r && maze[p][y] == 0) ++p;
-    join(Sid(p-1, y), Sid(x, y));
-
-    int q = y - 1;
-    while(q >= 0 && maze[x][q] == 0) --q;
-    join(Sid(x, q+1), Sid(x, y));
-
-    q = y + 1;
-    while(q < c && maze[x][q] == 0) ++q;
-    join(Sid(x, q-1), Sid(x, y));
+  inline bool Legal(int x, int y) {
+    return !(x < 0 || x >= row || y < 0 || y >= col); 
   }
-  
 
-  int Sid(int x, int y) { return x * c + y; }
+  bool Dfs(int x, int y, const vector<vector<int>>& maze) {
+    if (Legal(x, y) || vis[x][y] ) return false;
+    if (x == dx && y == dy) return true;
+
+    vis[x][y] = 1; 
+
+    for (int i=0; i<4; ++i) {
+      int k = 1; 
+      while(Legal(x + k * rs[i], y + k * cs[i]) && !maze[x+k*rs[i]][y+k*cs[i]]) {
+        if (dx == x + k * rs[i] && dy == y + k * cs[i]) return true;
+        ++k;
+      }
+      
+      int nx = x + k * rs[i], ny = y + k * cs[i];
+      if (Dfs(nx, ny, maze)) return true;
+    }
+
+    return false;
+  }
 };
