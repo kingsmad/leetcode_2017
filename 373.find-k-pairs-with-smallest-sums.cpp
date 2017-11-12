@@ -11,7 +11,7 @@ class Solution {
  public:
   vector<pair<int, int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2,
                                         int k) {
-    auto fn = [](pair<int, int> p1, pair<int, int> p2) { 
+    auto fn = [](pair<int, int> p1, pair<int, int> p2) {
       return p1.first + p1.second < p2.first + p2.second;
     };
 
