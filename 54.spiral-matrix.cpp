@@ -17,8 +17,8 @@ class Solution {
     while(x1 <= x2 && y1 <= y2) {
       for (int i=y1; i<=y2; ++i) ans.push_back(matrix[x1][i]); 
       for (int i=x1+1; i<=x2; ++i) ans.push_back(matrix[i][y2]);
-      for (int i=y2-1; i>=y1; --i) ans.push_back(matrix[x2][i]);
-      for (int i=x2-1; i>x1; --i) ans.push_back(matrix[i][y1]);
+      if (x1 != x2) for (int i=y2-1; i>=y1; --i) ans.push_back(matrix[x2][i]);
+      if (y1 != y2) for (int i=x2-1; i>x1; --i) ans.push_back(matrix[i][y1]);
       ++x1, ++y1, --x2, --y2;
     }
 
