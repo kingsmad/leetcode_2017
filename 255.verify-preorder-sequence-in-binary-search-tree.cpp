@@ -48,7 +48,7 @@ class Solution {
     for (int j=1; (1<<j)<=n; ++j) {
       for (int i=0; i+(1<<j)<=n; ++i) {
         st[i][j] = max(st[i][j-1], st[i+(1<<(j-1))][j-1]);
-        st1[i][j] = min(st[i][j-1], st[i+(1<<(j-1))][j-1]);
+        st1[i][j] = min(st1[i][j-1], st1[i+(1<<(j-1))][j-1]);
       }
     }
   }
