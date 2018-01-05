@@ -16,23 +16,22 @@ struct TreeNode {
 class Solution {
  public:
   TreeNode* upsideDownBinaryTree(TreeNode* root) {
-    return calc(root);         
+    TreeNode* ans = nullptr;
+    calc(root, &ans);
+    return ans;
   }
   
-  TreeNode* calc(TreeNode* root) {
-    if (!root) return nullptr;
-    if (!root->left && !root->right) return root;
-
-    TreeNode* t1 = calc(root->left);
-    TreeNode* t2 = calc(root->right);
-
-    if (t1) {
-      t1->left = t2;
-      t1->right = root;
-      return t1;
+  TreeNode* calc(TreeNode* root, TreeNode** newRoot) {
+    if (!root) return root;
+    if (!root->left && !root->right) {
+      *newRoot = root;
+      return root;
     }
-    if (t2) {
-      t2->left = root;
-    }
+    TreeNode* t1 = calc(root->left, newRoot);
+    t1->left = root->right;
+    t1->right = root;
+
+    root->left = root->right = nullptr;
+    return t1->right;
   }
 };
