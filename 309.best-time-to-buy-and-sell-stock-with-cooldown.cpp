@@ -1,33 +1,20 @@
-#include <cstring>
-#include <vector>
-#include <stack>
-#include <algorithm>
-
+#include <bits/stdc++.h>
 using namespace std;
-
-const int maxn = 1e3 + 10;
-
-int dp[maxn][maxn];
 
 class Solution {
  public:
   int maxProfit(vector<int>& prices) {
-    memset(dp, -1, sizeof(dp));
     int n = prices.size();
-    return Calc(0, n, prices);
-  }
+    if (n == 0) return 0;
+    vector<int> on_stock(n + 1, 0);
+    vector<int> off_stock(n + 1, 0);
 
-  int Calc(int x, int y, const vector<int>& prices) {
-    if (y - x <= 1) return dp[x][y] = 0;
-    if (dp[x][y] != -1) return dp[x][y];
-    if (x + 2 == y) return dp[x][y] = max(0, prices.at(y-1) - prices.at(x));
-
-
-    dp[x][y] = max(0, prices.at(y-1) - prices.at(x));
-    for (int k=x+1; k<y; ++k) {
-      dp[x][y] = max(dp[x][y], Calc(x, k, prices) + Calc(k+1, y, prices));
+    on_stock[1] = -prices[0];
+    for (int i = 2; i <= n; ++i) {
+      on_stock[i] = max(on_stock[i-1], off_stock[i - 2] - prices[i - 1]);
+      off_stock[i] = max(off_stock[i - 1], on_stock[i - 1] + prices[i - 1]);
     }
 
-    return dp[x][y];
+    return off_stock[n];
   }
 };
