@@ -1,31 +1,32 @@
-#include <stack>
-#include <iostream>
-#include <vector>
-#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 class Solution {
  public:
   string parseTernary(string expression) {
-    stack<char> ms;
+    string s;
     int n = expression.size();
-    for (int i=n-1; i>0; --i) {
-      char c = expression.at(i);
-      if (isdigit(c)) ms.push(c);
-      if (c == '?') {
-        char x = ms.top();
-        ms.pop();
-        char y = ms.top();
-        ms.pop();
-
-        if (expression.at(i-1) == 'T') ms.push(x); 
-        else ms.push(y);
-      } 
+    for (int i=n-1; i>=0; --i) {
+      s.push_back(expression[i]);
+      if (s.size() < 5) continue;
+      char v;
+      if (check(s.substr(s.size()-5, 5), &v)) {
+        s.erase(s.end() - 5, s.end());
+        s.push_back(v);
+      }
     }
+    return s;
+  }
 
-    string ans = "";
-    ans.push_back(ms.top());
-    return ans;
+  bool check(string s, char* ans) {
+    reverse(s.begin(), s.end());
+    if (s[0] != 'T' && s[0] != 'F') return false; 
+    if (s[1] != '?') return false;
+    if (s[3] != ':') return false;
+
+    if (s[0] == 'T') *ans = s[2];
+    else *ans = s[4];
+    return true;
   }
 };

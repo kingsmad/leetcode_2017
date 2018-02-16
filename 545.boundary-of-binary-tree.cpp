@@ -1,70 +1,51 @@
-#include <iostream>
-#include <map>
-#include <set>
-#include <stack>
-#include <string>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
-
 #ifdef ROACH_ONLINE_JUDGE
 struct TreeNode {
   int val;
-  TreeNode* left;
-  TreeNode* right;
+  TreeNode *left;
+  TreeNode *right;
   TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 #endif
 
 class Solution {
  public:
-  void FindLeft(TreeNode* root, vector<int>& lv, set<int>& smp) {
-    TreeNode* t = root;
-    while(t) {
-      if (smp.count(t->val) == 0) 
-        lv.push_back(t->val);
-      if (t->left) t = t->left;
-      else t = t->right;
-    }
-  }
-
-  void FindRight(TreeNode* root, vector<int>& lv, set<int>& smp) {
-    TreeNode* t = root;
-    while(t) {
-      if (smp.count(t->val) == 0) 
-        lv.push_back(t->val);
-      if (t->right) t = t->right;
-      else t = t->left;
-    }
-  }
-
-  void FindLeaves(TreeNode* root, vector<int>& v, set<int>& smp) {
-    if (!root) return;
-    if (!root->left  && !root->right) {
-      if (smp.count(root->val) == 0) v.push_back(root->val);
-      return;
-    }
-    FindLeaves(root->left, v, smp);
-    FindLeaves(root->right, v, smp);
-  }
-
   vector<int> boundaryOfBinaryTree(TreeNode* root) {
-    vector<int> lv, rv;
-    set<int> smp;
-    FindLeft(root, lv, smp);
-    FindRight(root, rv, smp);
-
-    for (int d : lv) smp.insert(d);
-    for (int d : rv) smp.insert(d);
-
-    vector<int> leaves;
-    FindLeaves(root, leaves, smp);
+    vector<int> res;
+    if (!root) return res;
 
     vector<int> ans;
-    for (int d : lv) ans.push_back(d);
-    for (int d : leaves) ans.push_back(d);
-    for (int i=rv.size()-1; i>0; --i) ans.push_back(rv.at(i));
+    if (root && (root->left || root->right)) ans.push_back(root->val);
 
+    TreeNode* p = root->left;
+    while(1) {
+      if (!p || (!p->left && !p->right) ) break;
+      ans.push_back(p->val);
+      if (p->left) p = p->left;
+      else p = p->right;
+    }
+
+    calc_leaves(root, ans);
+
+    vector<int> tmp;  
+    p = root->right;
+    while(1) {
+      if (!p || (!p->left && !p->right)) break;
+      tmp.push_back(p->val);
+      if (p->right) p = p->right;
+      else p = p->left;
+    }
+    reverse(tmp.begin(), tmp.end());
+    
+    ans.insert(ans.end(), tmp.begin(), tmp.end());
     return ans;
+  }
+
+  void calc_leaves(TreeNode* o, vector<int>& ans) {
+    if (!o) return;
+    if (!o->left && !o->right) ans.push_back(o->val);
+    calc_leaves(o->left, ans);
+    calc_leaves(o->right, ans);
   }
 };
