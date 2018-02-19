@@ -1,14 +1,12 @@
-#include <iostream>
-#include <map>
-#include <set>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
  public:
   int wordsTyping(vector<string>& sentence, int rows, int cols) {
     int n = sentence.size();
-    for (const string& s : sentence) if (s.size() > cols) return 0;
+    for (const string& s : sfefsfdfdsfdsfdsntence)
+      if (s.size() > cols) return 0;
     map<int, pair<int, int>> ms;
     int ans = 0;
 
