@@ -1,31 +1,34 @@
-#include <cstring>
-#include <vector>
-#include <iostream>
-
+#include <bits/stdc++.h>
 using namespace std;
+
 const int maxn = 110;
 const int inf = 1e9 + 10;
-int n, m, dis[maxn][26], dp[maxn][maxn];
+int n, m, dp[maxn][maxn];
 
 class Solution {
  public:
   int findRotateSteps(string ring, string key) {
-    n = key.size(), m = ring.size();
-    calc_dis(ring);
+    int n = ring.size(), m = key.size();
     memset(dp, -1, sizeof(dp));
-  }
 
-  void calc_dis(const string& ring) {
-    int n = ring.size();
-    for (int i=0; i<n; ++i) fill(&dis[i][0], &dis[i][0]+26, inf);
-    for (int i=0; i<n; ++i) {
-      for (int s=0; s<n; ++s) {
-        int c1 = ring.at((i+s)%n) - 'a';
-        int c2 = ring.at((i+n-s)%n) - 'a';
-        dis[i][c1] = min(dis[i][c1], s);
-        dis[i][c2] = min(dis[i][c2], s);
+    // dp[i][j] = min(dp[i-1][k] + dis(k, j) + 1)
+    for (int j=0; j<n; ++j) dp[0][j] = min(j, n-j);
+
+    for (int i=1; i<=m; ++i) {
+      for (int j=0; j<n; ++j) {
+        dp[i][j] = inf;
+        if (key[i-1] != ring[j]) continue; 
+        for (int k=0; k<n; ++k) {
+          int v = abs(k - j);
+          v = min(v, n-v);
+          dp[i][j] = min(dp[i][j], dp[i-1][k] + v + 1);
+        }
       }
     }
+    
+    int ans = inf;
+    for (int j=0; j<n; ++j) ans = min(ans, dp[m][j]);
+    return ans;
   }
 };
 
