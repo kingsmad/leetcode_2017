@@ -10,7 +10,7 @@ class Solution {
     int n = v.size();
     int l = 0, r = n-1, ans = 0;
     while(l < r) {
-      ans = max(ans, abs(min(v.at(l), v.at(r)) * (r - l))); 
+      ans = max(ans, min(v.at(l), v.at(r)) * (r - l)); 
       if (v.at(l) < v.at(r)) ++l; 
       else --r;
     }
